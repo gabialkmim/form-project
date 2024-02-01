@@ -1,0 +1,57 @@
+
+
+<div class="p-4">
+    <div class="flex justify-between items-center">
+        <h2 class="text-gray-500 text-xl font-bold">Usuários</h2>
+
+        <div class="flex flex-col items-end justify-end">
+            <div class="relative flex items-center gap-2">
+                <div class="flex bg-white items-center px-2 rounded-md">
+                    <input type="text" placeholder="Pesquisar..." [(ngModel)]="searchTerm"
+                        class="p-1 w-full focus:outline-none transition">
+                    <fa-icon [icon]="['fas', 'search']" class="text-gray-500"></fa-icon>
+                </div>
+
+                <button (click)="navigateToCadastro()"
+                    class="p-1 px-6 flex gap-2 border rounded-md bg-white text-black">
+                    <fa-icon [icon]="['fas', 'clipboard']"></fa-icon>
+                    Cadastrar Usuário
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="shadow-lg rounded-lg mt-4 overflow-x-auto">
+        <table class="min-w-full bg-gray-600" [class.empty]="filteredUsers.length === 0">
+            <thead [class.hidden]="filteredUsers.length === 0">
+                <tr class="text-white">
+                    <th class="py-2 px-4 text-start">NOME</th>
+                    <th class="py-2 px-4 text-start">SEXO</th>
+                    <th class="py-2 px-4 text-start">DATA DE NASCIMENTO</th>
+                    <th class="py-2 px-4 text-start">AÇÕES</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="filteredUsers.length > 0; else noUsers">
+                <tr *ngFor="let user of filteredUsers" class="bg-white" (click)="navigateToUserDetail(user.id)">
+                    <td class="py-2 px-4 align-top text-start">{{ user.usuTxNome }}</td>
+                    <td class="py-2 px-4 align-top text-start">{{ user.usuTxSexo }}</td>
+                    <td class="py-2 px-4 align-top text-start">{{ user.usuDtNascimento | date:'dd/MM/yyyy' }}</td>
+                    <td class="py-2 px-4 align-top text-start">
+                        <button (click)="editUser(user.id)" class="text-yellow-400 focus:outline-none mr-4">
+                            <fa-icon icon="pencil"></fa-icon>
+                        </button>
+                        <button (click)="deleteUser(user.id)" class="text-red-400 focus:outline-none">
+                            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        
+
+        <ng-template #noUsers>
+            <div class="py-4 text-black text-start p-1 px-4 bg-white">Nenhum usuário encontrado.</div>
+        </ng-template>
+    </div>
+</div>

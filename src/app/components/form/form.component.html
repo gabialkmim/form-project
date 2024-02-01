@@ -1,0 +1,211 @@
+<div class="flex justify-between items-center text-gray-500 text-xl">
+    <strong><p>Cadastrar Atleta</p></strong>
+</div>
+
+<div class="bg-white shadow-lg rounded-lg p-6 mx-auto mt-5 w-auto">
+    <h2 class="text-center text-2xl font-bold">Cadastro de usuários</h2>
+    
+    <form #userForm="ngForm" (submit)="onSubmit(userForm)">
+        <p class="text-gray-500 mb-4">Informações básicas do usuário</p>
+        
+        <div class="grid grid-cols-3 gap-4 mb-4">
+        
+        
+            <div class="mb-4">
+                <label for="nomeCompleto" class="block text-sm font-medium text-gray-600">Nome Completo*</label>
+                <input 
+                    [(ngModel)]="userPostForm.usuTxNome" 
+                    type="text" id="nomeCompleto" name="nomeCompleto" class="border rounded-md p-2 w-full placeholder:text-gray-400"
+                    placeholder="Ex.: Maria Gabriela Leite Alkmim">
+            </div>
+        
+        
+        
+            <div class="mb-4">
+                <label for="sexo" class="block text-sm font-medium text-gray-600">Sexo*</label>
+                <select id="sexo"  [(ngModel)]="userPostForm.usuTxSexo" name="sexo" class="border rounded-md p-2 w-full " >
+                    <option [value]="undefined"  selected>Selecione...</option>
+                    <option *ngFor="let genero of tipoGenero | keyvalue" [value]="genero.value">
+                        {{genero.key}}
+                    </option>
+                </select>
+            </div>
+        
+        
+            <div class="mb-4">
+                <label for="dataNascimento" class="block text-sm font-medium text-gray-600">Data de Nascimento*</label>
+                <input type="date" id="dataNascimento" name="dataNascimento" class="border rounded-md p-2 w-full  text-black"
+                    placeholder="Ex.: dd/mm/aaaa"
+                    [(ngModel)]="userPostForm.usuDtNascimento">
+            </div>
+        
+        
+            <div class="mb-4 ">
+                <label for="cpf" class="block text-sm font-medium text-gray-600">CPF*</label>
+                <input type="text" id="cpf" name="cpf" class="border rounded-md p-2 w-full  text-black"
+                    placeholder="Ex.: 999.999.999-99"
+                    [(ngModel)]="userPostForm.usuTxCpf">
+            </div>
+        
+        </div>
+        
+        
+        <hr class="border-t my-6 border-gray-300">
+        
+        <p class="text-gray-500 mb-4">Contatos do Usuário</p>
+        
+        <div class="grid grid-cols-2 gap-4 col-span-3">
+            <div *ngFor="let contato of userPostForm.usuListContatos; let i = index" class="grid grid-cols-2 gap-4 col-span-3">
+                <div class="mb-4">
+                    <label [for]="'contato' + (i + 1)" class="block text-sm font-medium text-gray-600">Contato:</label>
+                    <input type="text" [id]="'contato' + (i + 1)" [name]="'conTxContato' + i"
+                        class="border rounded-md p-2 w-full" placeholder="Digite o contato..."
+                        [(ngModel)]="userPostForm.usuListContatos[i].conTxContato">
+                </div>
+        
+                <div class="mb-4">
+                    <label [for]="'tipoContato' + (i + 1)" class="block text-sm font-medium text-gray-600">Tipo de
+                        Contato:</label>
+                    <select [id]="'tipoContato' + (i + 1)" [name]="'conTxTipo' + i" class="border rounded-md p-2 w-full"
+                        [(ngModel)]="userPostForm.usuListContatos[i].conTxTipo">
+                        <option *ngFor="let contatoEnum of tipoContato | keyvalue" [value]="contatoEnum.value">
+                            {{contatoEnum.key}}
+                        </option>
+                    </select>
+                </div>
+        
+            
+                <div class="mb-4" *ngIf="i >= 2 ">
+                    <div>
+                        <button type="button" (click)="removerContato(i)" class="bg-transparent text-red-600 border border-red-600 p-2 rounded-md w-32 mb-2 md:mb-0 hover:bg-red-600 hover:text-white transition-colors duration-300">
+                            <fa-icon [icon]="['fas', 'xmark']" class="mr-2 transition-colors duration-300"></fa-icon>
+                            Remover
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <button type="button" (click)="adicionarContato()"
+            class=" bg-transparent text-blue-900 border border-blue-900 p-2 rounded-md mb-2 md:mb-0 hover:bg-blue-900 hover:text-white transition-colors duration-300">
+            <fa-icon icon="plus" />
+            Adicionar Contato
+        </button>
+
+
+
+        <hr class="border-t my-6 border-gray-300">
+        
+        <p class="text-gray-500 mb-4">Endereço do usuário</p>
+        
+
+            
+            <div class="grid grid-cols-3 gap-3">
+        
+
+        <div class="mb-4">
+            <label for="cep" class="block text-sm font-medium text-gray-600">CEP*</label>
+            <input type="text" id="cep" name="logTxCep" class="border rounded-md p-2 w-full" [(ngModel)]="userPostForm.usuObjLogradouro.logTxCep"
+                placeholder="Ex.: 20211-901" required>
+        </div>
+
+
+        
+        <div class="mb-4">
+            <label for="pais" class="block text-sm font-medium text-gray-600">País*</label>
+                <select id ="pais" name="pais" class="border rounded-md p-2 w-full" [(ngModel)]="userPostForm.usuObjLogradouro.paiNrId" (change)="changePais($event)">
+                    <option [value]="undefined" selected>Selecione...</option>
+                    <option *ngFor="let contrie of countries " [value]="contrie.pai_nr_id">
+                        {{contrie.pai_tx_descricao_pt}}
+                    </option>
+                </select>
+        </div>
+
+        
+
+        <div class="mb-4">
+            <label for="estado" class="block text-sm font-medium text-gray-600">Estado</label>
+            <select id="estado" name="estado" class="border rounded-md p-2 w-full" [(ngModel)]="userPostForm.usuObjLogradouro.estNrId" (change)="changeStates($event)">
+                <option [value]="undefined" selected>Selecione...</option>
+                <option *ngFor="let state of states " [value]="state.est_nr_id">
+                    {{state.est_tx_descricao}}
+                </option>
+            </select>
+        </div>
+
+        
+
+            <div class="mb-4">
+                <label for="cidade" class="block text-sm font-medium text-gray-600">Cidade*</label>
+                <select id="cidade" name="cidade" class="border rounded-md p-2 w-full" [(ngModel)]="userPostForm.usuObjLogradouro.cidNrId">
+                    <option [value]="undefined" selected>Selecione...</option>
+                    <option *ngFor="let citie of cities" [value]="citie.cid_nr_id">
+                        {{citie.cid_tx_descricao}}
+                    </option>
+                </select>
+
+        </div>
+
+        
+      
+        
+        <div class="mb-4">
+            <label for="logradouro" class="block text-sm font-medium text-gray-600">Logradouro*</label>
+            <input type="text" id="logradouro" name="logTxLogradouro" class="border rounded-md p-2 w-full"
+                [(ngModel)]="userPostForm.usuObjLogradouro.logTxLogradouro" placeholder="Ex.: Ladeira do Carmo">
+        </div>
+        
+        
+        <div class="mb-4">
+            <label for="numero" class="block text-sm font-medium text-gray-600">Número*</label>
+            <input type="number" id="numero" name="logNrNumero" class="border rounded-md p-2 w-full"
+                [(ngModel)]="userPostForm.usuObjLogradouro.logNrNumero" placeholder="Ex.: 999">
+        </div>
+        
+        
+        
+        <div class="mb-4">
+            <label for="bairro" class="block text-sm font-medium text-gray-600">Bairro*</label>
+            <input type="text" id="bairro" name="logTxBairro" class="border rounded-md p-2 w-full"
+                [(ngModel)]="userPostForm.usuObjLogradouro.logTxBairro" placeholder="Ex.: Santa Teresa" >
+        </div>
+
+
+        <div class="mb-4">
+            <label for="complemento" class="block text-sm font-medium text-gray-600">Complemento</label>
+            <input type="text" id="complemento" name="logTxComplemento" class="border rounded-md p-2 w-full"
+                [(ngModel)]="userPostForm.usuObjLogradouro.logTxComplemento" placeholder="Ex.: Apartamento">
+        </div>
+    </div>
+        
+
+        <div class="flex flex-col-reverse md:flex-row justify-end mt-4">
+
+            <button type="button"
+                class="bg-transparent text-red-600 border border-red-600 p-2 rounded-md w-32 mb-2 md:mb-0 hover:bg-red-600 hover:text-white transition-colors duration-300">
+                <fa-icon [icon]="['fas', 'times']" class="mr-2"></fa-icon>
+                Cancelar
+            </button>
+        
+            <button type="submit"
+                class="bg-transparent text-blue-900 border border-blue-900 p-2 rounded-md w-32 mb-2 md:mb-0 ml-2 hover:bg-blue-900 hover:text-white transition-colors duration-300">
+                <fa-icon [icon]="['fas', 'save']" class="mr-2"></fa-icon>
+                Salvar
+            </button>
+
+            <button type="button" [routerLink]="['/list']"
+                class="bg-transparent text-green-600 border border-green-600 p-2 rounded-md w-32 mb-2 md:mb-0 ml-2 hover:bg-green-600 hover:text-white transition-colors duration-300">
+                <fa-icon [icon]="['fas', 'list']" class="mr-2"></fa-icon>
+                Ir para Lista
+            </button>
+
+            <div *ngIf="message" class="mt-4 p-2 rounded-md" [class.bg-green-300]="message.includes('sucesso')"
+                [class.bg-red-300]="message.includes('Erro')">
+                {{ message }}
+            </div>
+           
+        </div>
+        </form>
+        </div>
+        
